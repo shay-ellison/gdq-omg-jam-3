@@ -26,6 +26,9 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        // RaycastHit2D
+
+
         Direction inputDirection = WhichInputDirection();
 
         //Debug.Log(inputDirection);
@@ -48,21 +51,22 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (direction == Direction.None) { return new Vector2(0f, 0f); }
         int directionAngle = (int)direction;
-        float scalar = 100.0f;
+        float scalarX = 100.0f;
+        float scalarY = 200.0f;
 
         float x = 0.0f;
         float y = 0.0f;
 
         if (directionAngle > 90 && directionAngle < 270) {  // -x side
-            x = -scalar;
+            x = -scalarX;
         } else if ((directionAngle < 90 && directionAngle >= 0) || (directionAngle > 270 && directionAngle < 360)) { // +x side
-            x = scalar;
+            x = scalarX;
         }
 
         if (directionAngle > 0 && directionAngle < 180) {
-            y = scalar;
+            y = scalarY;
         } else if (directionAngle > 180 && directionAngle < 360) {
-            y = -scalar;
+            y = -scalarY;
         }
 
         Vector2 force = new Vector2(x, y);

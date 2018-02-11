@@ -1,4 +1,4 @@
 * Water spray physics
 * Put out fire
-* Random stage generation???
 * Guy move physics + range detection
+* Animation
