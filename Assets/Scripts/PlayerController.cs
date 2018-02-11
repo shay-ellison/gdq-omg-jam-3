@@ -41,7 +41,17 @@ public class PlayerController: MonoBehaviour {
             // Need to see if something is within reach in direction
             Vector2 directionVector = DirectionToDirectionVector(inputDirection);
 
-            RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, directionVector, strongSprayLength, 256);  // only looking at Sprayable layer (8 - 9th layer)
+            // Check if we are hitting any fire!
+            RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, directionVector, weakSprayLength, 512);  // and again for fire
+            if (raycastHit.collider != null) {
+                // Fire got sprayed
+                GameObject fireObject = raycastHit.collider.gameObject;
+                FireStats fireStats = fireObject.GetComponent<FireStats>();
+                fireStats.Sprayed();
+            }
+
+            // Check if you are Spraying off of something
+            raycastHit = Physics2D.Raycast(transform.position, directionVector, strongSprayLength, 256);  // only looking at Sprayable layer (8 - 9th layer)
 
             drawWaterStream.StartPosition(transform.position);
 
@@ -79,14 +89,7 @@ public class PlayerController: MonoBehaviour {
                 }
             }
 
-            // Check if we are hitting any fire!
-            raycastHit = Physics2D.Raycast(transform.position, directionVector, weakSprayLength, 512);  // and again for fire
-            if (raycastHit.collider != null) {
-                // Fire got sprayed
-                GameObject fireObject = raycastHit.collider.gameObject;
-                FireStats fireStats = fireObject.GetComponent<FireStats>();
-                fireStats.Sprayed();
-            }
+            
         } else {
 
         }
@@ -135,12 +138,12 @@ public class PlayerController: MonoBehaviour {
         if (direction == Direction.None) { return new Vector2(0f, 0f); }
         int directionAngle = (int)direction;
 
-        float xPower = 100.0f;
-        float yPower = 100.0f;
+        float xPower = 80.0f;
+        float yPower = 80.0f;
 
         if (!strong) {
-            xPower = 60.0f;
-            yPower = 60.0f;
+            xPower = 55.0f;
+            yPower = 55.0f;
         }
 
         float x = 0.0f;

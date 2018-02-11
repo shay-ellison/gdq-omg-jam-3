@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SpraySurface
   - Extinguish
+  - EndGoal
   layers:
   - Default
   - TransparentFX

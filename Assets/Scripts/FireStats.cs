@@ -15,7 +15,7 @@ public class FireStats : MonoBehaviour {
 
         sprayCounter += 1;
 
-        if (sprayCounter == 10) {
+        if (sprayCounter == 7) {
             sprayCounter = 0;
             health -= 1;
 
@@ -25,9 +25,7 @@ public class FireStats : MonoBehaviour {
                 // Vector3 currentPosition = transform.position;
 
                 transform.localScale = new Vector3(currentScale.x / 2, currentScale.y, currentScale.z);
-            }
-
-            if (health <= 0) {
+            } else { 
                 Destroy(gameObject);
             }
         }
