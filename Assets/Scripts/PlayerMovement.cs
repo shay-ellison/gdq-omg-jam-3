@@ -6,6 +6,9 @@ public class PlayerMovement : MonoBehaviour {
 
     Rigidbody2D rigidBody;
 
+    private float strongSprayLength = 2.0f;
+    private float weakSprayLength = 1.0f;
+
     /* Direction to send the water in */
     public enum Direction: int {  // Directon + Degrees
         DownRight=315,
@@ -26,33 +29,83 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // RaycastHit2D
-
-
         Direction inputDirection = WhichInputDirection();
 
         //Debug.Log(inputDirection);
 
         if (inputDirection != Direction.None) {
 
-            //Debug.Log("NOT NONE");
+            // Need to see if something is within reach in direction
+            Vector2 directionVector = DirectionToDirectionVector(inputDirection);
 
-            // We want to fire the player in the opposite direction
-            Direction oppositeDirection = TheOppositeDirection(inputDirection);
-            Vector2 oppositeForce = DirectionalForce(oppositeDirection);
+            RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, directionVector, strongSprayLength, 256);  // only looking at Sprayable layer (8 - 9th layer)
+            /*if (raycastHit.collider == null) {
+                raycastHit = Physics2D.Raycast(transform.position, directionVector, weakSprayLength);
+            }*/
 
-            //Debug.Log(oppositeForce);
+            if (raycastHit.collider != null) {
+                //Debug.Log("HIT SOMETHING!");
+                //Debug.Log(raycastHit.collider.gameObject.name);
 
-            rigidBody.AddForce(oppositeForce);
+                string tag = raycastHit.collider.gameObject.tag;
+
+                //Debug.Log(tag);
+
+                if (tag == "SpraySurface") {
+                    //Debug.Log("HIT SPRAY SURFACE!!");
+
+                    // We want to fire the player in the opposite direction
+                    Direction oppositeDirection = TheOppositeDirection(inputDirection);
+                    Vector2 oppositeForce = DirectionalForce(oppositeDirection);
+
+                    //Debug.Log(oppositeForce);
+
+                    rigidBody.AddForce(oppositeForce);
+                }
+            }
         }
 	}
+
+    Vector2 DirectionToDirectionVector(Direction direction) {
+        Vector2 directionVector = Vector2.zero;
+        switch (direction) {
+            case Direction.Down:
+                directionVector = Vector2.down;
+                break;
+            case Direction.DownLeft:
+                directionVector = new Vector2(-0.5f, -1.0f);
+                break;
+            case Direction.DownRight:
+                directionVector = new Vector2(0.5f, -1.0f);
+                break;
+            case Direction.Left:
+                directionVector = Vector2.left;
+                break;
+            case Direction.Right:
+                directionVector = Vector2.right;
+                break;
+            case Direction.Up:
+                directionVector = Vector2.up;
+                break;
+            case Direction.UpLeft:
+                directionVector = new Vector2(-0.5f, 1.0f);
+                break;
+            case Direction.UpRight:
+                directionVector = new Vector2(0.5f, 1.0f);
+                break;
+            case Direction.None:
+                directionVector = Vector2.zero;
+                break;
+        }
+        return directionVector;
+    }
 
     Vector2 DirectionalForce(Direction direction)
     {
         if (direction == Direction.None) { return new Vector2(0f, 0f); }
         int directionAngle = (int)direction;
-        float scalarX = 100.0f;
-        float scalarY = 200.0f;
+        float scalarX = 150.0f;
+        float scalarY = 300.0f;
 
         float x = 0.0f;
         float y = 0.0f;
