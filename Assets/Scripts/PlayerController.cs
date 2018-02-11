@@ -59,7 +59,6 @@ public class PlayerController: MonoBehaviour {
 
                 if (raycastHit.collider != null) {
                     Debug.Log("HIT WEAK!");
-
                     // We want to fire the player in the opposite direction
                     Direction oppositeDirection = TheOppositeDirection(inputDirection);
                     Vector2 oppositeForce = DirectionalForce(oppositeDirection, false);
@@ -69,7 +68,7 @@ public class PlayerController: MonoBehaviour {
         }
 
         // TODO: Make this much fancier!!!
-        if (rigidBody.velocity.magnitude > 14.0f) {
+        if (rigidBody.velocity.magnitude > 14.0f) {  // AKA top speed
             rigidBody.velocity = rigidBody.velocity.normalized * 14.0f;  // normalized is basing it on 1?
         }
 	}
@@ -113,11 +112,11 @@ public class PlayerController: MonoBehaviour {
         int directionAngle = (int)direction;
 
         float xPower = 125.0f;
-        float yPower = 175.0f;
+        float yPower = 125.0f;
 
         if (!strong) {
             xPower = 75.0f;
-            yPower = 100.0f;
+            yPower = 75.0f;
         }
 
         float x = 0.0f;
