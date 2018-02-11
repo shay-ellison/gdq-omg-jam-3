@@ -6,12 +6,12 @@ public class DrawWaterStream : MonoBehaviour {
     public LineRenderer lineRenderer;
 
     public void StartPosition(Vector3 position) {
-        Vector3 renderVector = new Vector3(position.x, position.y, 100);
+        Vector3 renderVector = new Vector3(position.x, position.y, 1f);
         lineRenderer.SetPosition(0, renderVector);
     }
 
     public void EndPosition(Vector3 position) {
-        Vector3 renderVector = new Vector3(position.x, position.y, 100);
+        Vector3 renderVector = new Vector3(position.x, position.y, 1f);
         lineRenderer.SetPosition(1, renderVector);
     }
 
