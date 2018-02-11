@@ -6,8 +6,8 @@ public class PlayerController: MonoBehaviour {
     public Rigidbody2D rigidBody;
     public DrawWaterStream drawWaterStream;
 
-    private float strongSprayLength = 2.0f;
-    private float weakSprayLength = 5.0f;
+    private float strongSprayLength = 3.0f;
+    private float weakSprayLength = 7.0f;
 
     /* Direction to send the water in */
     public enum Direction: int {  // Directon + Degrees
@@ -56,7 +56,7 @@ public class PlayerController: MonoBehaviour {
             drawWaterStream.StartPosition(transform.position);
 
             if (raycastHit.collider != null) {
-                Debug.Log("HIT STRONG!");
+                // Debug.Log("HIT STRONG!");
                 drawWaterStream.EndPosition(raycastHit.point);
 
                 // We want to fire the player in the opposite direction
@@ -70,7 +70,7 @@ public class PlayerController: MonoBehaviour {
 
                 if (raycastHit.collider != null) {
                     drawWaterStream.EndPosition(raycastHit.point);
-                    Debug.Log("HIT WEAK!");
+                    // Debug.Log("HIT WEAK!");
                     // We want to fire the player in the opposite direction
                     Direction oppositeDirection = TheOppositeDirection(inputDirection);
                     Vector2 oppositeForce = DirectionalForce(oppositeDirection, false);
@@ -84,14 +84,10 @@ public class PlayerController: MonoBehaviour {
                     float y = Mathf.Sin(rads);
 
                     // lineRenderer.SetPosition(1, transform.position + (new Vector3(directionVector.x, directionVector.y) * weakSprayLength));
-                    Vector3 reachVector = transform.position + new Vector3(x, y) * weakSprayLength;
+                    Vector3 reachVector = transform.position + new Vector3(x, y, 0f) * weakSprayLength;
                     drawWaterStream.EndPosition(reachVector);
                 }
-            }
-
-            
-        } else {
-
+            }   
         }
 
         // TODO: Make this much fancier!!!
@@ -138,12 +134,12 @@ public class PlayerController: MonoBehaviour {
         if (direction == Direction.None) { return new Vector2(0f, 0f); }
         int directionAngle = (int)direction;
 
-        float xPower = 80.0f;
-        float yPower = 80.0f;
+        float xPower = 60.0f;
+        float yPower = 60.0f;
 
         if (!strong) {
-            xPower = 55.0f;
-            yPower = 55.0f;
+            xPower = 50.0f;
+            yPower = 50.0f;
         }
 
         float x = 0.0f;

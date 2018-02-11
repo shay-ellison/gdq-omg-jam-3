@@ -1,3 +1,6 @@
-* Improve Water spray physics
-* Improve movement + range detection
 * Player HP
+* Water Spray Dissapear after x time
+* Hearts for Health
+* Stage Clear
+* Game Over
+* Restart

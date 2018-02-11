@@ -15,7 +15,7 @@ public class FireStats : MonoBehaviour {
 
         sprayCounter += 1;
 
-        if (sprayCounter == 7) {
+        if (sprayCounter == 5) {
             sprayCounter = 0;
             health -= 1;
 
