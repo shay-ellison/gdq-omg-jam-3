@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerController: MonoBehaviour {
 
     Rigidbody2D rigidBody;
 
-    private float strongSprayLength = 2.0f;
-    private float weakSprayLength = 1.0f;
+    private float strongSprayLength = 1.0f;
+    private float weakSprayLength = 5f;
 
     /* Direction to send the water in */
     public enum Direction: int {  // Directon + Degrees
@@ -24,11 +24,16 @@ public class PlayerMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        rigidBody = GetComponent<Rigidbody2D>();	
+        if (rigidBody == null) {
+            rigidBody = GetComponent<Rigidbody2D>();
+        }
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
+        Debug.Log("CURRENT VELOCITY MAGNITUDE");
+        Debug.Log(rigidBody.velocity.magnitude);
+
         Direction inputDirection = WhichInputDirection();
 
         //Debug.Log(inputDirection);
@@ -39,30 +44,33 @@ public class PlayerMovement : MonoBehaviour {
             Vector2 directionVector = DirectionToDirectionVector(inputDirection);
 
             RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, directionVector, strongSprayLength, 256);  // only looking at Sprayable layer (8 - 9th layer)
-            /*if (raycastHit.collider == null) {
-                raycastHit = Physics2D.Raycast(transform.position, directionVector, weakSprayLength);
-            }*/
+
+            Debug.DrawRay(transform.position, directionVector, Color.blue);
 
             if (raycastHit.collider != null) {
-                //Debug.Log("HIT SOMETHING!");
-                //Debug.Log(raycastHit.collider.gameObject.name);
+                Debug.Log("HIT STRONG!");
+                // We want to fire the player in the opposite direction
+                Direction oppositeDirection = TheOppositeDirection(inputDirection);
+                Vector2 oppositeForce = DirectionalForce(oppositeDirection, true);
+                rigidBody.AddRelativeForce(oppositeForce, ForceMode2D.Force);
+            } else {
+                // Look longer for weak spray
+                raycastHit = Physics2D.Raycast(transform.position, directionVector, weakSprayLength, 256);
 
-                string tag = raycastHit.collider.gameObject.tag;
-
-                //Debug.Log(tag);
-
-                if (tag == "SpraySurface") {
-                    //Debug.Log("HIT SPRAY SURFACE!!");
+                if (raycastHit.collider != null) {
+                    Debug.Log("HIT WEAK!");
 
                     // We want to fire the player in the opposite direction
                     Direction oppositeDirection = TheOppositeDirection(inputDirection);
-                    Vector2 oppositeForce = DirectionalForce(oppositeDirection);
-
-                    //Debug.Log(oppositeForce);
-
-                    rigidBody.AddForce(oppositeForce);
+                    Vector2 oppositeForce = DirectionalForce(oppositeDirection, false);
+                    rigidBody.AddRelativeForce(oppositeForce, ForceMode2D.Force);
                 }
             }
+        }
+
+        // TODO: Make this much fancier!!!
+        if (rigidBody.velocity.magnitude > 14.0f) {
+            rigidBody.velocity = rigidBody.velocity.normalized * 14.0f;  // normalized is basing it on 1?
         }
 	}
 
@@ -100,26 +108,31 @@ public class PlayerMovement : MonoBehaviour {
         return directionVector;
     }
 
-    Vector2 DirectionalForce(Direction direction)
-    {
+    Vector2 DirectionalForce(Direction direction, bool strong) {
         if (direction == Direction.None) { return new Vector2(0f, 0f); }
         int directionAngle = (int)direction;
-        float scalarX = 150.0f;
-        float scalarY = 300.0f;
+
+        float xPower = 125.0f;
+        float yPower = 175.0f;
+
+        if (!strong) {
+            xPower = 75.0f;
+            yPower = 100.0f;
+        }
 
         float x = 0.0f;
         float y = 0.0f;
 
         if (directionAngle > 90 && directionAngle < 270) {  // -x side
-            x = -scalarX;
+            x = -xPower;
         } else if ((directionAngle < 90 && directionAngle >= 0) || (directionAngle > 270 && directionAngle < 360)) { // +x side
-            x = scalarX;
+            x = xPower;
         }
 
         if (directionAngle > 0 && directionAngle < 180) {
-            y = scalarY;
+            y = yPower;
         } else if (directionAngle > 180 && directionAngle < 360) {
-            y = -scalarY;
+            y = -yPower;
         }
 
         Vector2 force = new Vector2(x, y);
@@ -130,10 +143,10 @@ public class PlayerMovement : MonoBehaviour {
         Direction inputDirection = Direction.None;
 
         // This will change depending on Controller vs. Keyboard
-        bool leftIsDown = Input.GetKeyDown(KeyCode.LeftArrow);
-        bool downIsDown = Input.GetKeyDown(KeyCode.DownArrow);
-        bool rightIsDown = Input.GetKeyDown(KeyCode.RightArrow);
-        bool upIsDown = Input.GetKeyDown(KeyCode.UpArrow);
+        bool leftIsDown = Input.GetKey(KeyCode.LeftArrow);
+        bool downIsDown = Input.GetKey(KeyCode.DownArrow);
+        bool rightIsDown = Input.GetKey(KeyCode.RightArrow);
+        bool upIsDown = Input.GetKey(KeyCode.UpArrow);
 
         if (downIsDown) {  // NOTE: Down will trump Up
             Debug.Log("DOWN");

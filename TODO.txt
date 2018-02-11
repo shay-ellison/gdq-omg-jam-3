@@ -1,4 +1,5 @@
 * Water spray physics
 * Put out fire
-* Guy move physics + range detection
+* Improve movement + range detection
 * Animation
+* Player HP
