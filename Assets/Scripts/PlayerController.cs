@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class PlayerController: MonoBehaviour {
 
-    Rigidbody2D rigidBody;
+    public Rigidbody2D rigidBody;
+    public LineRenderer lineRenderer;
 
-    private float strongSprayLength = 1.0f;
-    private float weakSprayLength = 5f;
+    private float strongSprayLength = 2.0f;
+    private float weakSprayLength = 5.0f;
 
     /* Direction to send the water in */
     public enum Direction: int {  // Directon + Degrees
@@ -27,18 +28,26 @@ public class PlayerController: MonoBehaviour {
         if (rigidBody == null) {
             rigidBody = GetComponent<Rigidbody2D>();
         }
+
+        if (lineRenderer != null) {
+            lineRenderer.positionCount = 2;
+            lineRenderer.startColor = Color.blue;
+            lineRenderer.endColor = Color.blue;
+            lineRenderer.sortingLayerName = "Foreground";
+        }
 	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-        Debug.Log("CURRENT VELOCITY MAGNITUDE");
-        Debug.Log(rigidBody.velocity.magnitude);
+
+    // Update is called once per frame
+    void FixedUpdate () {
+        //Debug.Log("CURRENT VELOCITY MAGNITUDE");
+        //Debug.Log(rigidBody.velocity.magnitude);
 
         Direction inputDirection = WhichInputDirection();
 
         //Debug.Log(inputDirection);
 
         if (inputDirection != Direction.None) {
+            lineRenderer.SetPosition(0, transform.position);
 
             // Need to see if something is within reach in direction
             Vector2 directionVector = DirectionToDirectionVector(inputDirection);
@@ -49,6 +58,8 @@ public class PlayerController: MonoBehaviour {
 
             if (raycastHit.collider != null) {
                 Debug.Log("HIT STRONG!");
+                lineRenderer.SetPosition(1, raycastHit.point);
+
                 // We want to fire the player in the opposite direction
                 Direction oppositeDirection = TheOppositeDirection(inputDirection);
                 Vector2 oppositeForce = DirectionalForce(oppositeDirection, true);
@@ -58,13 +69,26 @@ public class PlayerController: MonoBehaviour {
                 raycastHit = Physics2D.Raycast(transform.position, directionVector, weakSprayLength, 256);
 
                 if (raycastHit.collider != null) {
+                    lineRenderer.SetPosition(1, raycastHit.point);
                     Debug.Log("HIT WEAK!");
                     // We want to fire the player in the opposite direction
                     Direction oppositeDirection = TheOppositeDirection(inputDirection);
                     Vector2 oppositeForce = DirectionalForce(oppositeDirection, false);
                     rigidBody.AddRelativeForce(oppositeForce, ForceMode2D.Force);
+                } else {
+
+                    int degrees = (int)inputDirection;
+                    float rads = degrees * Mathf.Deg2Rad;
+                    float x = Mathf.Cos(rads);
+                    float y = Mathf.Sin(rads);
+
+                    // lineRenderer.SetPosition(1, transform.position + (new Vector3(directionVector.x, directionVector.y) * weakSprayLength));
+                    lineRenderer.SetPosition(1, transform.position + new Vector3(x, y) * weakSprayLength);
+                    lineRenderer.enabled = true;
                 }
             }
+        } else {
+           lineRenderer.enabled = false;
         }
 
         // TODO: Make this much fancier!!!
