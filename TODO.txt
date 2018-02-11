@@ -1,4 +1,3 @@
 * Improve Water spray physics
-* Put out fire
 * Improve movement + range detection
 * Player HP

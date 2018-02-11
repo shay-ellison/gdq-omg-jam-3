@@ -283,6 +283,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DrawWaterStream.cs" />
+    <Compile Include="Assets\Scripts\FireStats.cs" />
     <Compile Include="Assets\Scripts\FollowPlayer.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
   </ItemGroup>

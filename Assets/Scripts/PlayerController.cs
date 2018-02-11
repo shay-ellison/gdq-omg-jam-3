@@ -78,6 +78,15 @@ public class PlayerController: MonoBehaviour {
                     drawWaterStream.EndPosition(reachVector);
                 }
             }
+
+            // Check if we are hitting any fire!
+            raycastHit = Physics2D.Raycast(transform.position, directionVector, weakSprayLength, 512);  // and again for fire
+            if (raycastHit.collider != null) {
+                // Fire got sprayed
+                GameObject fireObject = raycastHit.collider.gameObject;
+                FireStats fireStats = fireObject.GetComponent<FireStats>();
+                fireStats.Sprayed();
+            }
         } else {
 
         }

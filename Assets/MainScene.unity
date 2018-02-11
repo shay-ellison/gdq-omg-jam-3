@@ -1669,6 +1669,8 @@ GameObject:
   - component: {fileID: 711255277}
   - component: {fileID: 711255276}
   - component: {fileID: 711255275}
+  - component: {fileID: 711255278}
+  - component: {fileID: 711255279}
   m_Layer: 9
   m_Name: Fire
   m_TagString: Extinguish
@@ -1750,6 +1752,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &711255278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 711255274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2acf7c855248584c90b06f10d76755a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &711255279
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 711255274}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.10221982, y: -0.15900803}
+  serializedVersion: 2
+  m_Radius: 0.8069191
 --- !u!1 &725170249
 GameObject:
   m_ObjectHideFlags: 0
