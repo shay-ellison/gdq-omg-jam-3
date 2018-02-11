@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController: MonoBehaviour {
-
     public Rigidbody2D rigidBody;
-    public LineRenderer lineRenderer;
+    public DrawWaterStream drawWaterStream;
 
     private float strongSprayLength = 2.0f;
     private float weakSprayLength = 5.0f;
@@ -29,66 +28,58 @@ public class PlayerController: MonoBehaviour {
             rigidBody = GetComponent<Rigidbody2D>();
         }
 
-        if (lineRenderer != null) {
-            lineRenderer.positionCount = 2;
-            lineRenderer.startColor = Color.blue;
-            lineRenderer.endColor = Color.blue;
-            lineRenderer.sortingLayerName = "Foreground";
+        if (drawWaterStream == null) {
+            drawWaterStream = GetComponent<DrawWaterStream>();
         }
 	}
 
     // Update is called once per frame
     void FixedUpdate () {
-        //Debug.Log("CURRENT VELOCITY MAGNITUDE");
-        //Debug.Log(rigidBody.velocity.magnitude);
-
         Direction inputDirection = WhichInputDirection();
 
-        //Debug.Log(inputDirection);
-
         if (inputDirection != Direction.None) {
-            lineRenderer.SetPosition(0, transform.position);
-
             // Need to see if something is within reach in direction
             Vector2 directionVector = DirectionToDirectionVector(inputDirection);
 
             RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, directionVector, strongSprayLength, 256);  // only looking at Sprayable layer (8 - 9th layer)
 
-            Debug.DrawRay(transform.position, directionVector, Color.blue);
+            drawWaterStream.StartPosition(transform.position);
 
             if (raycastHit.collider != null) {
                 Debug.Log("HIT STRONG!");
-                lineRenderer.SetPosition(1, raycastHit.point);
+                drawWaterStream.EndPosition(raycastHit.point);
 
                 // We want to fire the player in the opposite direction
                 Direction oppositeDirection = TheOppositeDirection(inputDirection);
                 Vector2 oppositeForce = DirectionalForce(oppositeDirection, true);
                 rigidBody.AddRelativeForce(oppositeForce, ForceMode2D.Force);
-            } else {
+            }
+            else {
                 // Look longer for weak spray
                 raycastHit = Physics2D.Raycast(transform.position, directionVector, weakSprayLength, 256);
 
                 if (raycastHit.collider != null) {
-                    lineRenderer.SetPosition(1, raycastHit.point);
+                    drawWaterStream.EndPosition(raycastHit.point);
                     Debug.Log("HIT WEAK!");
                     // We want to fire the player in the opposite direction
                     Direction oppositeDirection = TheOppositeDirection(inputDirection);
                     Vector2 oppositeForce = DirectionalForce(oppositeDirection, false);
                     rigidBody.AddRelativeForce(oppositeForce, ForceMode2D.Force);
-                } else {
-
+                }
+                else {
+                    // Need to go up to the weak spray length since we didn't hit anything
                     int degrees = (int)inputDirection;
                     float rads = degrees * Mathf.Deg2Rad;
                     float x = Mathf.Cos(rads);
                     float y = Mathf.Sin(rads);
 
                     // lineRenderer.SetPosition(1, transform.position + (new Vector3(directionVector.x, directionVector.y) * weakSprayLength));
-                    lineRenderer.SetPosition(1, transform.position + new Vector3(x, y) * weakSprayLength);
-                    lineRenderer.enabled = true;
+                    Vector3 reachVector = transform.position + new Vector3(x, y) * weakSprayLength;
+                    drawWaterStream.EndPosition(reachVector);
                 }
             }
         } else {
-           lineRenderer.enabled = false;
+
         }
 
         // TODO: Make this much fancier!!!
@@ -135,12 +126,12 @@ public class PlayerController: MonoBehaviour {
         if (direction == Direction.None) { return new Vector2(0f, 0f); }
         int directionAngle = (int)direction;
 
-        float xPower = 125.0f;
-        float yPower = 125.0f;
+        float xPower = 100.0f;
+        float yPower = 100.0f;
 
         if (!strong) {
-            xPower = 75.0f;
-            yPower = 75.0f;
+            xPower = 60.0f;
+            yPower = 60.0f;
         }
 
         float x = 0.0f;
