@@ -26,6 +26,7 @@ public class PlayerStats : MonoBehaviour {
             health -= 1;
             if (health <= 0) {
                 Debug.Log("YOU DEAD");
+                LevelManager.PlayerDied();
                 Destroy(gameObject);
             } else {
                 fullHearts[health].GetComponent<Renderer>().enabled = false;
@@ -34,6 +35,10 @@ public class PlayerStats : MonoBehaviour {
             fullHearts[health].GetComponent<Renderer>().enabled = true;
             health++;
             Destroy(collisionObject);
+        } else if (collisionObject.tag == "EndGoal") {
+            Debug.Log("WON!");
+            LevelManager.StageClear();
+            Destroy(gameObject);
         }
     }
 }
