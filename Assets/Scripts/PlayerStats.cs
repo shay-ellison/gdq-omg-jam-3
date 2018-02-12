@@ -25,7 +25,7 @@ public class PlayerStats : MonoBehaviour {
         if (collisionObject.tag == "Extinguish") {
             health -= 1;
             if (health <= 0) {
-                Debug.Log("YOU DEAD");
+                //Debug.Log("YOU DEAD");
                 LevelManager.PlayerDied();
                 Destroy(gameObject);
             } else {
@@ -36,7 +36,7 @@ public class PlayerStats : MonoBehaviour {
             health++;
             Destroy(collisionObject);
         } else if (collisionObject.tag == "EndGoal") {
-            Debug.Log("WON!");
+            //Debug.Log("WON!");
             LevelManager.StageClear();
             Destroy(gameObject);
         }

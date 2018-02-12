@@ -25,7 +25,11 @@ public class FireStats : MonoBehaviour {
                 // Vector3 currentPosition = transform.position;
 
                 transform.localScale = new Vector3(currentScale.x / 2, currentScale.y, currentScale.z);
-            } else { 
+                // Also scale down the Collider
+                BoxCollider2D collider = gameObject.GetComponent<BoxCollider2D>();
+                collider.offset = new Vector2(collider.offset.x / 2, collider.offset.y);
+            }
+            else { 
                 Destroy(gameObject);
             }
         }
