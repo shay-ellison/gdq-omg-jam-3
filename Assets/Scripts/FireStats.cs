@@ -15,11 +15,11 @@ public class FireStats : MonoBehaviour {
 
         sprayCounter += 1;
 
-        if (sprayCounter == 5) {
+        if (sprayCounter == 4) {
             sprayCounter = 0;
             health -= 1;
 
-            if (health > 0) {
+            if (health > 0) {  // Get smaller
 
                 Vector3 currentScale = transform.localScale;
                 // Vector3 currentPosition = transform.position;
@@ -29,7 +29,7 @@ public class FireStats : MonoBehaviour {
                 BoxCollider2D collider = gameObject.GetComponent<BoxCollider2D>();
                 collider.offset = new Vector2(collider.offset.x / 2, collider.offset.y);
             }
-            else { 
+            else { // It's gone
                 Destroy(gameObject);
             }
         }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class DrawWaterStream : MonoBehaviour {
     public LineRenderer lineRenderer;
-    private float timeToLive = 0.3f;
+    private float timeToLive = 0.1f;
     private bool drawing = false;
 
     public void StartPosition(Vector3 position) {
         Vector3 renderVector = new Vector3(position.x, position.y, 1f);
         lineRenderer.SetPosition(0, renderVector);
         drawing = true;
-        timeToLive = 0.5f;
+        timeToLive = 0.1f;
         lineRenderer.enabled = true;
     }
 
@@ -19,7 +19,7 @@ public class DrawWaterStream : MonoBehaviour {
         Vector3 renderVector = new Vector3(position.x, position.y, 1f);
         lineRenderer.SetPosition(1, renderVector);
         drawing = true;
-        timeToLive = 0.5f;
+        timeToLive = 0.1f;
         lineRenderer.enabled = true;
     }
 

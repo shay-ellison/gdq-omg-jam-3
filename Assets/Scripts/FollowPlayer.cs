@@ -17,13 +17,14 @@ public class FollowPlayer : MonoBehaviour {
 	}
 
     void FixedUpdate() {
-        
-        Vector3 currentPosition = transform.position;
-        Vector2 playerPosition = player.transform.position;
+        if (player != null) {
+            Vector3 currentPosition = transform.position;
+            Vector2 playerPosition = player.transform.position;
 
-        float newX = Mathf.SmoothDamp(currentPosition.x, playerPosition.x, ref velocity.x, 0.2f);
-        float newY = Mathf.SmoothDamp(currentPosition.y, playerPosition.y, ref velocity.y, 0.2f);
+            float newX = Mathf.SmoothDamp(currentPosition.x, playerPosition.x, ref velocity.x, 0.2f);
+            float newY = Mathf.SmoothDamp(currentPosition.y, playerPosition.y, ref velocity.y, 0.2f);
 
-        transform.position = new Vector3(newX, newY, currentPosition.z);
+            transform.position = new Vector3(newX, newY, currentPosition.z);
+        }
     }
 }

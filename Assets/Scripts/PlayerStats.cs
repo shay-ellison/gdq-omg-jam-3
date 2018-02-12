@@ -32,9 +32,11 @@ public class PlayerStats : MonoBehaviour {
                 fullHearts[health].GetComponent<Renderer>().enabled = false;
             }
         } else if (collisionObject.tag == "Health") {
-            fullHearts[health].GetComponent<Renderer>().enabled = true;
-            health++;
-            Destroy(collisionObject);
+            if (health < fullHearts.Length) {
+                fullHearts[health].GetComponent<Renderer>().enabled = true;
+                health++;
+                Destroy(collisionObject);
+            }
         } else if (collisionObject.tag == "EndGoal") {
             //Debug.Log("WON!");
             LevelManager.StageClear();
